@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  restaurant_db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'restaurant'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: '123456'
+      MYSQL_ROOT_PASSWORD: '123456'
+    ports:
+      - 3333:3306
+    networks:
+      report:
+        aliases:
+          - database
+networks:
+  report:
+    driver: bridge
