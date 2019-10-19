@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: restaurant
+    labels:
+        app: restaurant
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: restaurant
+    template:
+        metadata:
+            labels:
+                app: restaurant
+        spec:
+            containers:
+                -   name: restaurant
+                    image: amartellram/restaurant-service:0.0.1
+                    imagePullPolicy: Always
+                    ports:
+                    - containerPort: 8090
+                    env:
+                    - name: MYSQL_HOST
+                      valueFrom:
+                        configMapKeyRef:
+                            name: mysql
+                            key: database-host
+                    - name: MYSQL_PORT
+                      valueFrom:
+                        configMapKeyRef:
+                            name: mysql
+                            key: database-port
+                    - name: MYSQL_DATABASE
+                      valueFrom:
+                        configMapKeyRef:
+                            name: mysql
+                            key: database-name
+                    - name: MYSQL_USER
+                      valueFrom:
+                        secretKeyRef:
+                            name: mysql
+                            key: database-username
+                    - name: MYSQL_PASSWORD
+                      valueFrom:
+                        secretKeyRef:
+                            name: mysql
+                            key: database-password
+                    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: restaurant
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 8090

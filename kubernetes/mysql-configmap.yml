@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql
+data:
+  database-host: mysql
+  database-port: "3306"
+  database-name: restaurant
